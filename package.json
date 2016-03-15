@@ -1,0 +1,50 @@
+{
+  "name": "thesis",
+  "version": "1.0.0",
+  "description": "Basic client app using GFC to accompany Predicator Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify scripts/index.js > build/scripts/index.js & stylus -u nib -w stylus/index.styl -o build/styles/index.css",
+    "watch": "watchify scripts/index.js -o build/scripts/index.js -d & stylus -u nib -w stylus/index.styl -o build/styles/index.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phdnode/thesis.git"
+  },
+  "author": "Sholto Maud",
+  "license": "ISC",
+  "dependencies": {
+    "activity-router": "^1.2.0",
+    "cpjax": "^1.1.0",
+    "dion": "^1.0.2",
+    "fastn": "^2.6.4",
+    "kgo": "^3.3.2",
+    "marked-ast": "^0.3.0",
+    "marked-ast-markdown": "^1.3.0",
+    "modal-component": "^1.1.0",
+    "rooty": "^2.0.0",
+    "route-tree": "^2.3.2",
+    "sea-lion": "^1.0.5",
+    "svg-icon-component": "^1.0.1"
+  },
+  "devDependencies": {
+    "watchify": "^3.7.0",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.4.0",
+    "browserify": "^13.0.0",
+    "debug": "^2.2.0",
+    "minifyify": "^7.2.1",
+    "nib": "^1.1.0",
+    "stylus": "^0.52.0",
+    "uglifyify": "^3.0.1"
+  },
+  "browserify": {
+    "transform": [
+      "rootify"
+    ]
+  },
+  "rootify": {
+    "rootPath": "./scripts"
+  }
+}

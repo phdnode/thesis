@@ -1,0 +1,48 @@
+.appBar {
+    font-family: title-font;
+    font-size: 30px;
+    font-weight: bold;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    height: 46px;
+    // background: rgba(0,0,0,.99);
+    background: lightBlue;
+    color: white;
+    padding: 10px;
+    box-shadow: 2px 2px 2px #888;
+    // color: white;
+    display: flex;
+    flex-direction: row;
+    flex-flow: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    @media (min-width: 600px) {
+      // width: 400px; 
+    }
+}
+
+.app-title{
+    font-family: Lobster;
+    font-size: 45px;
+    // box-shadow: 2px 2px 2px #888;
+    color: black;
+    // background-color:white;
+    // border-radius: 25%;
+    // padding: 10px;
+}
+
+.menuIcon, .loginIcon{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.loginIcon{
+    visibility: hidden;
+}
