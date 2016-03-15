@@ -3,8 +3,8 @@ module.exports = {
          _url: '/',
          _title: 'Home'
     },
-    tute:{
-         _url: 'tute/{_id}',
-         _title: 'Tute'
+    doc:{
+         _url: 'doc/{_id}',
+         _title: 'Document'
     }
 };

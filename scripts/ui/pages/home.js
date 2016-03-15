@@ -20,6 +20,7 @@ var home = fastn('div', {class: 'page'},
                         ).on('click',function(event,scope){
                             // console.log('helol',scope.get('item.id') );
                             app.activityRouter.add('doc',{_id:scope.get('item.id')});
+                            app.doc.setCurrentDoc( scope.get('item.id') );
                         });
                 }
             })

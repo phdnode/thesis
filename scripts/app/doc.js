@@ -1,43 +1,112 @@
 var fastn = require('^fastn'),
     marked = require('marked-ast'),
     toMarkdown = require('marked-ast-markdown'),
-    debug = require('debug')('tutorme:app.doc');
+    debug = require('debug')('tutorme:app.doc'),
+    session = require('./session'),
+    db = require('./localPersistence'),
+    localSettings = {},
+    cpjax = require('cpjax'),
+    offline = true;
 
 var docModel = new fastn.Model({
     currentDoc: {},
-    docs : [
-        {
-            id : '01',
-            author: 'Sholto Maud',
-            email: 'sholto.maud@gmail.com',
-            edits : [ {
-                startDate: new Date("2016-03-01T11:00:00"),
-                endTime: ''}],
-            lastEdit: new Date("2016-03-01T11:00:00"),
-            ast : [],
-            title: 'First test'
-        },{
-            id: '02',
-            author: 'Sholto Maud',
-            email: 'sholto.maud@gmail.com',
-            edits : [ {
-                startDate: new Date("2016-03-01T11:00:00"),
-                endTime: ''}],
-            lastEdit: new Date("2016-03-01T11:00:00"),
-            ast : [],
-            title: 'Second test'
-        }
-    ]
+    docs : []
 });
 
-// [ { type: 'heading',
-//     text: [ 'The Principle of Least Action and the Philosophy of Engineering: Philosophy of Mind' ],
-//     level: 1,
-//     raw: 'The Principle of Least Action and the Philosophy of Engineering: Philosophy of Mind' },
-//   { type: 'paragraph',
-//     text: [ 'Candidature Doctoral thesis by Mr Sholto Maud' ] },
-//   { type: 'heading', text: [ 'Usage' ], level: 2, raw: 'Usage' },
-//   { type: 'paragraph', text: [ 'Download with git, or npm' ] } ]
+
+function getDocument(id, callback){
+    cpjax({
+        url:'/documents/' + id,
+        dataType: 'json',
+        headers:{
+            authorization: session.getToken()
+        }
+    }, callback);
+}
+
+function getDocuments(){
+    localSettings['id'] = 'somedocument';
+    if (offline){
+        db.getDocuments( localSettings, function(error, data){ 
+            docModel.push('docs', JSON.parse(data.value));
+        });
+    }
+    else { 
+        cpjax({
+            url:'/documents',
+            dataType: 'json',
+            headers:{
+                authorization: session.getToken()
+            }
+        }, function(error, data){
+            if(error){
+                return;
+            }
+            docModel.set('documents', data)
+        });
+    }
+}
+
+getDocuments();
+
+db.getReferences( localSettings, function(error, data){ 
+            console.log('data',data);
+        });
+
+
+// function updateDocument( callback){
+//      cpjax({
+//         url:'/documents/' + documentModel.get('document.id'),
+//         method: 'PUT',
+//         dataType: 'json',
+//         data: getData(),
+//         headers:{
+//             authorization: session.getToken()
+//         }
+//     }, callback);
+// }
+
+function createDocument(callback){
+    console.log('getData',getData());
+    cpjax({
+        url:'/documents',
+        method: 'POST',
+        dataType: 'json',
+        data: getData(),
+        headers:{
+            authorization: session.getToken()
+        }
+    }, callback);
+}
+
+// getDocuments();
+
+// function getData(){
+//     var dat = {}
+//     dat.data = documentModel.get('document.data');
+//     dat.schemaId = documentModel.get('document.schemaId');
+//     dat.data.date = new Date();
+//     return dat;
+// }
+
+// debugging
+docModel.on('.|**', function(data){
+    console.log('docModel',data);
+});
+
+function save (action, callback){
+    if ( action == 'create' ) { 
+        createDocument(function(error, document){
+            console.log('created Document.id',document.id);
+            callback( null, document.id);
+        })
+    } else if (action == 'update'){
+        updateDocument( function(error, document){
+            console.log('updated Document.id',document.id);
+            callback( null, document.id);
+        })  
+    } 
+}
 
 
 // var content = fs.readFileSync(__dirname + '/test.md', 'utf8');
@@ -49,12 +118,16 @@ function updateDoc(content){
     docModel.update('currentDoc.ast', ast);
 }
 
-
-function getDoc(){
-    return toMarkdown(docModel.get('currentDoc'));
+function getCurrentDoc(){
+    return toMarkdown(docModel.get('currentDoc.ast'));
 }
 
-
+function setCurrentDoc(id){
+    console.log('id');
+    var currentDocument = docModel.get('');
+    
+    docModel.set('currentDoc',currentDocument );
+}
 
 // var ast = marked.parse(content);
 // var html = marked.render(ast);
@@ -65,5 +138,7 @@ function getDoc(){
 // console.log('ast', ast);
 
 module.exports = {
-    docModel : docModel
+    docModel : docModel,
+    getCurrentDoc: getCurrentDoc,
+    setCurrentDoc: setCurrentDoc
 }
