@@ -15,10 +15,11 @@ module.exports = function(){
             // <span class="mdl-button__ripple-container"><span class="mdl-ripple is-animating" style="width: 92.5097px; height: 92.5097px; transform: translate(-50%, -50%) translate(19px, 20px);"></span></span></button>
             }
         ),
-        fastn('div',{class:'app-title'}, 'Thesis' )
+        fastn('div',{class:'app-title'}, 'Simple Thesis' )
         .on('click',function(event, scope) {
             event.preventDefault();
             app.activityRouter.reset('home');
+            app.doc.clearCurrentDoc();
         }),
         fastn('div',{class:'menu'},
             fastn('icon', {'name': 'login'}) )

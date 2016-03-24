@@ -1,5 +1,22 @@
+
 .docs{
     width: 100%;
+    margin-bottom: 80px;
+}
+
+
+
+.doc-section-paragraph, .doc-section-heading{
+    font-family: 'Computer';
+    draggable: true
+}
+
+.doc-section-heading{
+    font-size: 30px;
+}
+
+.doc-section-paragraph{
+    font-size: 14px;
 }
 
 .doc-container{
@@ -11,18 +28,17 @@
 
 .doc-card{
     font-family: main-font;
-    font-size: 20px;
-    box-shadow: md-card-2;
-    padding: 15px;
     margin-top: 10px;
     
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    padding:15px;
     background-color: white;
-    
+    outline: 0px solid transparent;
+
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: flex-start;
-   
 }
 
 .doc-title, .doc-startDate{

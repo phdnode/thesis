@@ -3,6 +3,7 @@ var data = [{
             key: "somedocument",
             valueEncoding : 'json',
             value: {
+                id: "somedocument",
                 author: 'Sholto Maud',
                 email: 'sholto.maud@gmail.com',
                 edits : [ {
@@ -25,6 +26,7 @@ var data = [{
             key: "somedocument3",
             valueEncoding : 'json',
             value: {
+                id: "somedocument2",
                 author: 'Sholto Maud',
                 email: 'sholto.maud@gmail.com',
                 edits : [ {
@@ -47,6 +49,7 @@ var data = [{
             key: "somedocument4",
             valueEncoding : 'json',
             value: {
+                id: "somedocument4",
                 author: 'Sholto Maud',
                 email: 'sholto.maud@gmail.com',
                 edits : [ {
@@ -69,6 +72,7 @@ var data = [{
             key: "somedocument5",
             valueEncoding : 'json',
             value: {
+                id: "somedocument5",
                 author: 'Sholto Maud',
                 email: 'sholto.maud@gmail.com',
                 edits : [ {
@@ -91,6 +95,7 @@ var data = [{
             key: "somedocument6",
             valueEncoding : 'json',
             value: {
+                id: "somedocument6",
                 author: 'Sholto Maud',
                 email: 'sholto.maud@gmail.com',
                 edits : [ {
@@ -103,16 +108,29 @@ var data = [{
                           raw: 'The Principle of Least Action and the Philosophy of Engineering: Philosophy of Mind' },
                         { type: 'paragraph',
                           text: [ 'Candidature Doctoral thesis by Mr Sholto Maud' ] },
-                        { type: 'heading', text: [ 'Usage' ], level: 2, raw: 'Usage' },
+                        { 
+                          type: 'heading', 
+                          text: [ 'Usage' ], 
+                          level: 2, 
+                          raw: 'Usage' 
+                        },
+                        { 
+                          type: 'heading', 
+                          text: [ 'Some thing nice' ], 
+                          level: 1, 
+                          raw: 'Usage' 
+                        },
                         { type: 'paragraph', text: [ 'Download with git, or npm' ] } 
                   ],
                 title: 'Second test'
               }
-        },{
+        },
+        {
             type: "put",
             key: "somedocument7",
             valueEncoding : 'json',
             value: {
+                id: "somedocument7",
                 author: 'Sholto Maud',
                 email: 'sholto.maud@gmail.com',
                 edits : [ {
@@ -127,10 +145,37 @@ var data = [{
                           text: [ 'Candidature Doctoral thesis by Mr Sholto Maud' ] },
                         { type: 'heading', text: [ 'Usage' ], level: 2, raw: 'Usage' },
                         { type: 'paragraph', text: [ 'Download with git, or npm' ] } 
+                        ,{
+                          type: "cite",
+                          text: [
+                            [
+                              {
+                                "citationSuffix": [],
+                                "citationNoteNum": 0,
+                                "citationMode": {
+                                  "type": "NormalCitation",
+                                  "text": []
+                                },
+                                "citationPrefix": [],
+                                "citationId": "odum_times_1954",
+                                "citationHash": 0
+                              }
+                            ],
+                            [
+                              {
+                                "type": "Str",
+                                "text": "[@odum_times_1954]"
+                              }
+                            ]
+                          ]
+                        }         
                   ],
                 title: 'Second test'
               }
         }
         ];
+
+        
+
 
 module.exports = data;

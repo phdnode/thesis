@@ -6,26 +6,35 @@ var fastn = require('^fastn'),
     db = require('./localPersistence'),
     localSettings = {},
     cpjax = require('cpjax'),
-    offline = true;
+    offline = true,
+    docModel = new fastn.Model({
+        docs : [],
+        currentHeadings: []
+    });
 
-var docModel = new fastn.Model({
-    currentDoc: {},
-    docs : []
+// debugging
+docModel.on('currentDoc|**', function(data){
+    console.log('docModel change',data);
 });
 
-
 function getDocument(id, callback){
-    cpjax({
-        url:'/documents/' + id,
-        dataType: 'json',
-        headers:{
-            authorization: session.getToken()
-        }
-    }, callback);
+    if (offline){
+        db.getDocuments( localSettings, function(error, data){ 
+            docModel.set('currentDoc', JSON.parse(data.value));
+        });
+    }
+    else {
+        cpjax({
+            url:'/documents/' + id,
+            dataType: 'json',
+            headers:{
+                authorization: session.getToken()
+            }
+        }, callback);
+    }    
 }
 
 function getDocuments(){
-    localSettings['id'] = 'somedocument';
     if (offline){
         db.getDocuments( localSettings, function(error, data){ 
             docModel.push('docs', JSON.parse(data.value));
@@ -49,23 +58,6 @@ function getDocuments(){
 
 getDocuments();
 
-db.getReferences( localSettings, function(error, data){ 
-            console.log('data',data);
-        });
-
-
-// function updateDocument( callback){
-//      cpjax({
-//         url:'/documents/' + documentModel.get('document.id'),
-//         method: 'PUT',
-//         dataType: 'json',
-//         data: getData(),
-//         headers:{
-//             authorization: session.getToken()
-//         }
-//     }, callback);
-// }
-
 function createDocument(callback){
     console.log('getData',getData());
     cpjax({
@@ -78,21 +70,6 @@ function createDocument(callback){
         }
     }, callback);
 }
-
-// getDocuments();
-
-// function getData(){
-//     var dat = {}
-//     dat.data = documentModel.get('document.data');
-//     dat.schemaId = documentModel.get('document.schemaId');
-//     dat.data.date = new Date();
-//     return dat;
-// }
-
-// debugging
-docModel.on('.|**', function(data){
-    console.log('docModel',data);
-});
 
 function save (action, callback){
     if ( action == 'create' ) { 
@@ -122,12 +99,46 @@ function getCurrentDoc(){
     return toMarkdown(docModel.get('currentDoc.ast'));
 }
 
-function setCurrentDoc(id){
-    console.log('id');
-    var currentDocument = docModel.get('');
-    
-    docModel.set('currentDoc',currentDocument );
+
+function clearCurrentDoc(){
+    docModel.set('currentHeadings', []);
+    docModel.set('currentCitations', []);
+    docModel.set('currentDoc', []);
 }
+
+function setCurrentDoc(id){
+    
+
+
+    docModel.set('currentHeadings', []);
+    docModel.set('currentCitations', []);
+    // docModel.set('references', []);
+    
+    if (offline){
+        db.getDocument( id, function(error, data){ 
+            var dat = JSON.parse(data);
+            var ast = [];
+            ast = dat.ast;
+            for ( i in ast ){
+                if ( ast[i]['type'] == 'heading' && ast[i]['level'] == 1 ){
+                    console.log('heading',ast[i], ast[i]['type']);
+                    var heading = ast[i]['text'][0];
+                    docModel.push('currentHeadings', heading );        
+                }
+                if ( ast[i]['type'] == 'cite' ){
+                    var citation = ast[i]['text'][1][0]['text'];
+                    // console.log('cite',ast[i]['text'][1][0]['text']);
+                    docModel.push('currentCitations', citation );        
+                }
+                
+                
+            }
+            docModel.set('currentDoc', JSON.parse(data));
+        });
+    }
+}
+
+
 
 // var ast = marked.parse(content);
 // var html = marked.render(ast);
@@ -140,5 +151,6 @@ function setCurrentDoc(id){
 module.exports = {
     docModel : docModel,
     getCurrentDoc: getCurrentDoc,
-    setCurrentDoc: setCurrentDoc
+    setCurrentDoc: setCurrentDoc,
+    clearCurrentDoc:clearCurrentDoc
 }

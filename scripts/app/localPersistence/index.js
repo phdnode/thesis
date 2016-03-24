@@ -15,8 +15,8 @@ db.batch(data, function (error, response) {
    if (error) {console.log('done',data);}
 })
 
-function getDocument( settings, callback ){ 
-    db.get(settings.id, callback);
+function getDocument( id, callback ){ 
+    db.get(id, callback);
 };
 
 function getDocuments( settings, callback ){ 
